@@ -745,7 +745,6 @@ app.service('listItemManagementService', function(listService, $localStorage) {
         };
       };
 
-      console.log(_newFieldTest(), _editFieldTest(), _idCheck(), _editModeTest());
       return _newFieldTest() && _editFieldTest() && _idCheck() && _editModeTest();
     }
 
