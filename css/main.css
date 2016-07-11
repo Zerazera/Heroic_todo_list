@@ -314,7 +314,7 @@ textarea {
   color: #FFA500;
 }
 
-ul *:not(.tooltip-font) {
+ul *:not(.tooltip) {
   padding-right: .5% !important;
   padding-left: .5% !important;
   padding-bottom: 0 !important;
@@ -344,7 +344,7 @@ ul *:not(.tooltip-font) {
 }
 
 @media only screen and (max-device-width: 360px) {
-  .complete-bar *:not(.tooltip-font) {
+  .complete-bar *:not(.tooltip) {
     margin-right: 0 !important;
     padding-right: 0 !important;
   }
