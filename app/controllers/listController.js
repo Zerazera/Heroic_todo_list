@@ -67,7 +67,6 @@ function listController(listService, listItemManagementService, $scope, $control
   }
 
   this.updateFields = function() {
-    console.log(this.formFields);
     listItemManagementService.setFields({
       'parentId' : this.formFields.parentId,
       'title' : this.formFields.title !== undefined ? this.formFields.title : '',
