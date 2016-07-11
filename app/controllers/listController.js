@@ -3,8 +3,13 @@
 var app = angular.module('listApp');
 
 app.controller('listController', listController);
+//app.controller('removeConfirmationController', removeConfirmationController);
+app.controller('modalInstanceCtrl', modalInstanceCtrl);
 
-function listController(listService, listItemManagementService, $scope, $localStorage, $sessionStorage) {
+function listController(listService, listItemManagementService, $scope, $controller, modalService) {
+
+  //var modalViewModal = $scope.$new();
+  //$controller('removeConfirmationController', modalViewModal);
 
   this.showBottomBar = true;
 
@@ -36,6 +41,8 @@ function listController(listService, listItemManagementService, $scope, $localSt
   this.setHoveredOn = listService.setHoveredOn.bind(listService);
   this.childrenHovered = listService.childrenHovered.bind(listService);
   this.proportionCompleted = listService.proportionCompleted.bind(listService);
+  this.numberOfSiblings = listService.numberOfSiblings.bind(listService);
+  this.moveItem = listService.moveItem.bind(listService);
 
   this.getEditMode = listItemManagementService.getEditMode.bind(listItemManagementService);
   this.getEditId = listItemManagementService.getEditId.bind(listItemManagementService);
@@ -60,9 +67,10 @@ function listController(listService, listItemManagementService, $scope, $localSt
   }
 
   this.updateFields = function() {
+    console.log(this.formFields);
     listItemManagementService.setFields({
       'parentId' : this.formFields.parentId,
-      'title' : this.formFields.title,
+      'title' : this.formFields.title !== undefined ? this.formFields.title : '',
       'desc' : this.formFields.desc
     });
   };
@@ -101,5 +109,20 @@ function listController(listService, listItemManagementService, $scope, $localSt
       this.setFormFields(listItemManagementService.clearNewFields());
       this.listForm.$setPristine();
     };
+  };
+};
+
+function modalInstanceCtrl($uibModalInstance, $scope, configObject) {
+  this.modalTitle = configObject.title;
+  this.modalBody = configObject.body;
+  this.okText = configObject.okText;
+  this.cancelText = configObject.cancelText;
+
+  this.ok = function () {
+  $uibModalInstance.close();
+  };
+
+  this.cancel = function () {
+    $uibModalInstance.dismiss();
   };
 };

@@ -1,0 +1,12 @@
+<div class='modal-header'>
+    <h3 class='modal-title'>{{ mic.modalTitle }}<span class='modal-close-button' ng-click='mic.cancel()'>X</span></h3>
+</div>
+<div class='modal-body'>
+    <p>
+      {{ mic.modalBody }}
+    </p>
+</div>
+<div class='modal-footer'>
+    <button class='btn btn-success' type='button' ng-click='mic.ok()'>{{ mic.okText }}</button>
+    <button class='btn btn-danger' type='button' ng-click='mic.cancel()'>{{ mic.cancelText }}</button>
+</div>

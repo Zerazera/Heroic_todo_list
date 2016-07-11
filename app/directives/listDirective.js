@@ -41,23 +41,29 @@ app.directive('toggleHideAllDescriptions', function(listService) {
   };
 });
 
-app.directive('removeCompleted', function(listService) {
+app.directive('removeCompleted', function(listService, modalService) {
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
       element.bind('click', function() {
-        scope.$apply(listService.removeCompletedItems());
+        scope.$apply(function() {
+          var modalinstanceCtrl = modalService.open({title: "Confirm delete operation", body: "Are you sure you want to delete all completed quests?", okText: "OK", cancelText: "Cancel"});
+          modalinstanceCtrl.result.then(function() {listService.removeCompletedItems();}, function() {});
+        });
       });
     }
   };
 });
 
-app.directive('removeAll', function(listService) {
+app.directive('removeAll', function(listService, modalService) {
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
       element.bind('click', function() {
-        scope.$apply(listService.removeAll());
+        scope.$apply(function() {
+          var modalinstanceCtrl = modalService.open({title: "Confirm delete operation", body: "Are you sure you want to delete all quests?", okText: "OK", cancelText: "Cancel"});
+          modalinstanceCtrl.result.then(function() {listService.removeAll();}, function() {});
+        });
       });
     }
   };
@@ -105,7 +111,7 @@ app.directive('toggleHideDescription', function(listService) {
   };
 });
 
-app.directive('removeItem', function(listService, listItemManagementService) {
+app.directive('removeItem', function(listService, listItemManagementService, modalService) {
   return {
     restrict: 'A',
     scope: {
@@ -114,8 +120,11 @@ app.directive('removeItem', function(listService, listItemManagementService) {
     link: function(scope, element, attrs) {
       element.bind('click', function() {
       scope.$apply(function() {
-        listItemManagementService.setEditMode({'editMode' : false, 'saveBool' : false});
-        listService.removeItem(scope.itemId);
+        var modalinstanceCtrl = modalService.open({title: "Confirm delete operation", body: "Are you sure you want to delete this quest and its subquests?", okText: "OK", cancelText: "Cancel"});
+        modalinstanceCtrl.result.then(function() {
+          listItemManagementService.setEditMode({'editMode' : false, 'saveBool' : false});
+          listService.removeItem(scope.itemId);
+        }, function() {});
       });
     });
     }
@@ -169,6 +178,26 @@ app.directive('filterSearchValue', function(listService) {
         scope.$apply(function() {
           listService.filterTitleAndDescription(scope.searchValue);
         });
+      });
+    }
+  };
+});
+
+app.directive('moveListItem', function(listService, $anchorScroll) {
+  return {
+    restrict: 'A',
+    scope: {
+      moveDown : '=',
+      itemId : '@'
+    },
+    link : function(scope, element, attrs) {
+      element.bind('click', function() {
+        scope.$apply(function() {
+          element[0].blur();
+          listService.setHoveredOn(scope.itemId, false);
+          listService.moveItem(scope.itemId, scope.moveDown);
+        });
+        $anchorScroll('item' + scope.itemId);
       });
     }
   };

@@ -7,7 +7,13 @@
         <div class='col-xs-1'>
           <span uib-tooltip='Percentage completed' tooltip-class='tooltip-font' tooltip-placement='auto right'>{{ lc.proportionCompleted(item.id) * 100 | number : 2 }}%</span>
         </div>
-        <div class='col-xs-offset-5 col-xs-1'>
+        <div class='col-xs-offset-3 col-xs-1'>
+            <span uib-tooltip='Move up' tooltip-class='tooltip-font' tooltip-placement='auto top' tooltip-trigger='mouseenter outsideClick' class='glyphicon glyphicon-circle-arrow-up move-button' ng-class='{"move-button-disabled" : lc.numberOfSiblings(item.id) === 0}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' move-down='false' move-list-item></span>
+        </div>
+        <div class='col-xs-1'>
+          <span uib-tooltip='Move down' tooltip-class='tooltip-font' tooltip-placement='auto top' tooltip-trigger='mouseenter outsideClick' class='glyphicon glyphicon-circle-arrow-down move-button' ng-class='{"move-button-disabled" : lc.numberOfSiblings(item.id) === 0}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' move-down='true' move-list-item></span>
+        </div>
+        <div class='col-xs-1'>
           <span uib-tooltip='Collapse / expand sub-quests' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon expand-collapse-button' ng-class='{"expand-collapse-disabled" : item.childrenIds.length === 0, "glyphicon-menu-up": item.collapsed, "glyphicon-menu-down" : !item.collapsed}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' toggle-collapsed></span>
         </div>
         <div class='col-xs-1'>
@@ -19,17 +25,17 @@
         <div class='col-xs-1'>
           <span uib-tooltip='Add sub-quest' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-plus add-button' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' ng-click='lc.showFormWithMainQuestSelected(item.id)'></span>
         </div>
-        <div class='col-xs-1 move-right'>
+        <div class='col-xs-1'>
           <span uib-tooltip='Remove quest and subquests' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-remove close-button' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' remove-item></span>
         </div>
         <div class='col-xs-12 add-border'>
-        <div class='list-title' ng-bind='item.title'></div>
-        <span ng-hide='item.hideDescription'>
-        <div class='list-desc text-justify' ng-bind='item.desc'></div>
-        </span>
+        <div class='list-title' ng-bind-html='item.title | removeTagsFilter | matchedSearchFilter : lc.searchValue'></div>
+        <!--<span ng-hide='item.hideDescription' class='description-text'>-->
+          <div class='description-text text-justify' ng-hide='item.hideDescription' ng-bind-html='item.desc | removeTagsFilter | matchedSearchFilter : lc.searchValue'></div>
+        <!--</span>-->
         </div><!--.col-xs-offset-1 col-xs-10-->
       </div>
-    <div class='col-xs-12' ng-hide='item.collapsed'>
+    <div class='col-xs-12 collapse-section' ng-hide='item.collapsed'>
       <ul class='list-group' ng-repeat='item in lc.listItems | filter : {parentId : item.id} : true track by item.id'>
         <li id='{{ "item" + item.id }}' class='list-group-item' ng-show='item.matchesFilter && item.matchesSearch' ng-mouseenter='lc.setHoveredOn(item.id, true)' ng-mouseleave='lc.setHoveredOn(item.id, false)'
         ng-class='"list-group-item-" + ((item.id === lc.formFields.parentId) ? "selected" : (lc.getEditMode() && item.id === lc.getEditId()) ? "editing" : ["uncompleted", "partially-completed", "completed"][item.completed])' ng-include='"./templates/list-item.html"'>

@@ -10,38 +10,50 @@ app.service('listService', function($localStorage) {
   this.initialize = function() {
     if (!_initialized) {
       if ($localStorage.listService && $localStorage.listService._listItems) {
-        //pull values from local storage if they're there
-
-          _listItems = $localStorage.listService._listItems;
-          _setNextId();
-
-          _listItems.forEach(function(listItem) {
-            listItem.matchesFilter = true;
-            listItem.matchesSearch = true;
-            listItem.parentOfMatchedFilter = false;
-            listItem.parentOfMatchedSearch = false;
-          });
-
-          if (!_validateListItems(_listItems)) {
-            alert('Whoa there, adventurer! It appears that nefarious demons may have tampered with your saved quests on local storage. Take heed of this, and if you run into issues clear your local storage for this site and reload the application.');
+        if (_validateListItems($localStorage.listService._listItems)) {
+          _pullValuesFromLocalStorage();
+        }
+        else {
+          var _answer = confirm('Whoa there, adventurer! It appears that nefarious demons may have tampered with your saved quests on local storage. Take heed of this, and if you run into issues clear your local storage for this site and reload the application. \n\nPress OK to ignore the issue, or Cancel to delete local storage.');
+          if (_answer) {
+            _pullValuesFromLocalStorage();
+          }
+          else {
+            _setLocalStorageToNewValue();
           };
+        };
       }
       else {
-        //sample listItems
-        $localStorage.listService = {'_listItems' : []};
-        this.addItem('First Quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '0');
-        this.addItem('First sub-quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '1');
-        this.addItem('Second sub-quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '1');
-        this.addItem('First sub-quest of sub-quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '3');
-        this.addItem('Second sub-quest of sub-quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '3');
-        this.addItem('Second Quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '0');
-        this.updateCompleteStatus('2');
-        this.toggleHideDescription('3');
-        this.saveValues();
+        _setLocalStorageToNewValue();
       };
       _initialized = true;
     };
   };
+
+  var _pullValuesFromLocalStorage = function() {
+    _listItems = $localStorage.listService._listItems;
+    _setNextId();
+    _listItems.forEach(function(listItem) {
+      listItem.matchesFilter = true;
+      listItem.matchesSearch = true;
+      listItem.parentOfMatchedFilter = false;
+      listItem.parentOfMatchedSearch = false;
+    });
+  };
+
+  var _setLocalStorageToNewValue = function() {
+    _listItems = [];
+    $localStorage.listService = {'_listItems' : []};
+    this.addItem('First Quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '0');
+    this.addItem('First sub-quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '1');
+    this.addItem('Second sub-quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '1');
+    this.addItem('First sub-quest of sub-quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '3');
+    this.addItem('Second sub-quest of sub-quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '3');
+    this.addItem('Second Quest', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent placerat a elit id dignissim.', '0');
+    this.updateCompleteStatus('2');
+    this.toggleHideDescription('3');
+    this.saveValues();
+  }.bind(this);
 
   var _validateListItems = function(listItems) { //tests listItems from localStorage for data integrity.
     if (angular.isArray(listItems)) {
@@ -323,7 +335,7 @@ app.service('listService', function($localStorage) {
   };
 
   this.getListItems = function() {
-    _sortListItems.bind(this);
+    _sortListItems();
     return _listItems;
   };
 
@@ -561,11 +573,11 @@ app.service('listService', function($localStorage) {
 
     _parentItems.forEach(function(parentItem) {
       _sortOrder.push(parentItem.id);
-      _sortOrder.concat(this.allDescendants(parentItem.id));
-    }).bind(this);
+      _sortOrder = _sortOrder.concat(this.allDescendants(parentItem.id));
+    }.bind(this));
 
     _listItems = _listItems.sort(function(listItem1, listItem2) {return _sortOrder.indexOf(listItem1.id) - _sortOrder.indexOf(listItem2.id);});
-  };
+  }.bind(this);
 
   this.filterCompleted = function(completedValue) {
     var _filteredItems = [], _showItems = [], _ancestorArray = [], _parentItems = [];
@@ -593,8 +605,9 @@ app.service('listService', function($localStorage) {
   };
 
   this.filterTitleAndDescription = function(searchValue) {
+    searchValue = searchValue.replace(/\\/g,'').replace(/\s$/,'');
     var _matchedItems = [], _showItems = [], _ancestorArray = [], _searchString = '', _parentItems = [];
-    var _searchValueArr = searchValue.split(/[^A-Za-z0-9]/);
+    var _searchValueArr = searchValue.split(/\s/);
     _searchValueArr.forEach(function(searchVal) {
       _searchString += '(?=.*' + searchVal + ')';
     });
@@ -631,10 +644,55 @@ app.service('listService', function($localStorage) {
   var _parentListItems = function() {
     return _listItems.filter(function(listItem) {return listItem.parentId === '0';});
   };
+
+  this.numberOfSiblings = function(itemId) {
+    var _item = this.findListItem(itemId);
+    if (_item.parentId === '0') {
+      return _parentListItems().length - 1;
+    }
+    else {
+      var _itemParent = this.findListItem(_item.parentId);
+      return _itemParent.childrenIds.length - 1;
+    };
+  };
+
+  this.moveItem = function(itemId, moveDown) {
+    var _item = this.findListItem(itemId);
+
+    if (_item.parentId !== '0') {
+      var _itemParent = this.findListItem(_item.parentId);
+      var _itemIndex = _itemParent.childrenIds.indexOf(_item.id), _newIndex;
+
+      if (moveDown) {
+        _newIndex = _itemIndex !== _itemParent.childrenIds.length - 1 ? _itemIndex + 1 : 0;
+      }
+      else { //move up
+        _newIndex = _itemIndex !== 0 ? _itemIndex - 1 : _itemParent.childrenIds.length - 1;
+      };
+
+      itemId = _itemParent.childrenIds.splice(_itemIndex, 1)[0];
+      _itemParent.childrenIds.splice(_newIndex, 0, itemId);
+    }
+
+    else { //_item.parentId === '0'
+      var _parentIds = _parentListItems().map(function(listItem) {return listItem.id;}), _pIdIndex = _parentIds.indexOf(itemId);
+      var _itemIndex = _findListItemIndex(itemId), _newIndex;
+
+      if (moveDown) {
+        _newIndex = _pIdIndex !== _parentIds.length - 1 ? _findListItemIndex(_parentIds[_pIdIndex + 1]) : 0;
+      }
+      else { //move up
+        _newIndex = _pIdIndex !== 0 ? _findListItemIndex(_parentIds[_pIdIndex - 1]) : _listItems.length - 1;
+      };
+
+      _item = _listItems.splice(_itemIndex, 1)[0];
+      _listItems.splice(_newIndex, 0, _item);
+    };
+  }.bind(this);
 });
 
 app.service('listItemManagementService', function(listService, $localStorage) {
-  var _editMode = false;
+  var _editMode = false, _initialized = false;
 
   var _new = {
         'title' : '',
@@ -653,30 +711,12 @@ app.service('listItemManagementService', function(listService, $localStorage) {
   };
 
   this.initialize = function() {
-    if ($localStorage.listItemManagementService) {
-      if (!_validateValues($localStorage.listItemManagementService._new, $localStorage.listItemManagementService._edit, $localStorage.listItemManagementService._editMode)) {
-        alert('Whoa there, adventurer! It appears that nefarious demons may have tampered with your saved new/editing list items on local storage. Take heed of this, and if you run into issues clear your local storage for this site and reload the application.');
-      };
-
-      if ($localStorage.listItemManagementService._editMode && typeof $localStorage.listItemManagementService._editMode === 'boolean') {
+    if (!_initialized) {
+      var _pullValuesFromLocalStorage = function() {
         _editMode = $localStorage.listItemManagementService._editMode;
-      }
-
-      else {
-        $localStorage.listItemManagementService._editMode = _editMode;
-      };
-
-      if ($localStorage.listItemManagementService._new && typeof $localStorage.listItemManagementService._new === 'object') {
         _new.title = $localStorage.listItemManagementService._new.title;
         _new.desc = $localStorage.listItemManagementService._new.desc;
         _new.parentId = $localStorage.listItemManagementService._new.parentId;
-      }
-
-      else {
-        $localStorage.listItemManagementService._new = _new;
-      };
-
-      if ($localStorage.listItemManagementService._edit && typeof $localStorage.listItemManagementService._edit === 'object') {
         _edit.id = $localStorage.listItemManagementService._edit.id;
         _edit.title = $localStorage.listItemManagementService._edit.title;
         _edit.desc = $localStorage.listItemManagementService._edit.desc;
@@ -684,19 +724,37 @@ app.service('listItemManagementService', function(listService, $localStorage) {
         _edit.originalTitle = $localStorage.listItemManagementService._edit.originalTitle;
         _edit.originalDesc = $localStorage.listItemManagementService._edit.originalDesc;
         _edit.originalParentId = $localStorage.listItemManagementService._edit.originalParentId;
+      };
+
+      var _setLocalStorageToNewValue = function() {
+        $localStorage.listItemManagementService = {
+          '_editMode' : _editMode,
+          '_new' : _new,
+          '_edit' : _edit
+        };
+      };
+
+      if ($localStorage.listItemManagementService) {
+        if (_validateValues($localStorage.listItemManagementService._new, $localStorage.listItemManagementService._edit, $localStorage.listItemManagementService._editMode)) {
+          _pullValuesFromLocalStorage();
+        }
+        else {
+
+          var _answer = confirm('Whoa there, adventurer! It appears that nefarious demons may have tampered with your saved new/editing list items on local storage. Take heed of this, and if you run into issues clear your local storage for this site and reload the application.\n\n Click OK to ignore the issue, or Cancel to delete the values from local storage.');
+
+          if (_answer) {
+            _pullValuesFromLocalStorage();
+          }
+          else {
+            _setLocalStorageToNewValue();
+          };
+        };
       }
 
       else {
-        $localStorage.listItemManagementService._edit = _edit;
+        _setLocalStorageToNewValue();
       };
-    }
-
-    else {
-      $localStorage.listItemManagementService = {
-        '_editMode' : _editMode,
-        '_new' : _new,
-        '_edit' : _edit
-      };
+      _initialized = true;
     };
   };
 
@@ -858,3 +916,22 @@ app.service('listItemManagementService', function(listService, $localStorage) {
       _edit.originalParentId = '0';
     };
   });
+
+
+app.service('modalService', function($uibModal) {
+  this.open = function(configObject) {
+    var _modalInstance = $uibModal.open({
+      animation: true,
+      backdrop: 'static',
+      windowClass: 'modal-window',
+      windowTopClass: 'modal-window-top',
+      templateUrl: 'templates/confirmation-modal.html',
+      controller: 'modalInstanceCtrl',
+      controllerAs: 'mic',
+      resolve: {
+        configObject: configObject
+      }
+    });
+    return _modalInstance;
+  };
+});
