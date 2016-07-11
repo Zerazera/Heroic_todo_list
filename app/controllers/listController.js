@@ -87,7 +87,7 @@ function listController(listService, listItemManagementService, $scope, $control
 
   this.addOrSaveButton = function() {
     if (listItemManagementService.getEditMode()) {
-      this.setFormFields(listItemManagementService.setEditMode({'bool' : false, 'saveBool' : true}));
+      this.setFormFields(listItemManagementService.setEditMode({'editMode' : false, 'saveBool' : true}));
       this.listForm.$setPristine();
     }
     else {
