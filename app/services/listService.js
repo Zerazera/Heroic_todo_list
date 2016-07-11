@@ -791,7 +791,7 @@ app.service('listItemManagementService', function(listService, $localStorage) {
 
       var _idCheck = function() {
         return (newObject.parentId === '0' || listService.validListItem(newObject.parentId)) && (editObject.id === '' || editObject.id === '0' || listService.validListItem(editObject.id)) &&
-        (editObject.parentId === '' || editObject.parentId === '0' || listService.validListItem(editObject.parentId)) && (editObject.originalParentId === '' || editObject.originalParentId === '0'|| listService(editObject.originalParentId));
+        (editObject.parentId === '' || editObject.parentId === '0' || listService.validListItem(editObject.parentId)) && (editObject.originalParentId === '' || editObject.originalParentId === '0'|| listService.validListItem(editObject.originalParentId));
       };
 
       var _editModeTest = function() {
