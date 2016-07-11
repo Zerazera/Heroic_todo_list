@@ -8,25 +8,25 @@
           <span uib-tooltip='Percentage completed' tooltip-class='tooltip-font' tooltip-placement='auto right'>{{ lc.proportionCompleted(item.id) * 100 | number : 2 }}%</span>
         </div>
         <div class='col-xs-offset-3 col-xs-1'>
-            <span uib-tooltip='Move up' tooltip-class='tooltip-font' tooltip-placement='auto top' tooltip-trigger='mouseenter outsideClick' class='glyphicon glyphicon-circle-arrow-up move-button' ng-class='{"move-button-disabled" : lc.numberOfSiblings(item.id) === 0}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' move-down='false' move-list-item></span>
+            <span uib-tooltip='Move up' tooltip-class='tooltip-font' tooltip-placement='auto right' tooltip-trigger='mouseenter outsideClick' class='glyphicon glyphicon-circle-arrow-up move-button' ng-class='{"move-button-disabled" : lc.numberOfSiblings(item.id) === 0}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' move-down='false' move-list-item></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Move down' tooltip-class='tooltip-font' tooltip-placement='auto top' tooltip-trigger='mouseenter outsideClick' class='glyphicon glyphicon-circle-arrow-down move-button' ng-class='{"move-button-disabled" : lc.numberOfSiblings(item.id) === 0}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' move-down='true' move-list-item></span>
+          <span uib-tooltip='Move down' tooltip-class='tooltip-font' tooltip-placement='auto right' tooltip-trigger='mouseenter outsideClick' class='glyphicon glyphicon-circle-arrow-down move-button' ng-class='{"move-button-disabled" : lc.numberOfSiblings(item.id) === 0}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' move-down='true' move-list-item></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Collapse / expand sub-quests' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon expand-collapse-button' ng-class='{"expand-collapse-disabled" : item.childrenIds.length === 0, "glyphicon-menu-up": item.collapsed, "glyphicon-menu-down" : !item.collapsed}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' toggle-collapsed></span>
+          <span uib-tooltip='Collapse / expand sub-quests' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon expand-collapse-button' ng-class='{"expand-collapse-disabled" : item.childrenIds.length === 0, "glyphicon-menu-up": item.collapsed, "glyphicon-menu-down" : !item.collapsed}' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' toggle-collapsed></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Hide / Show Description' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-list-alt' ng-class='item.hideDescription ? "close-button" : "add-button"' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' toggle-hide-description></span>
+          <span uib-tooltip='Hide / Show Description' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon glyphicon-list-alt' ng-class='item.hideDescription ? "close-button" : "add-button"' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' toggle-hide-description></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Edit item' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-cog settings-button' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' ng-click='lc.editListItem(item)'></span>
+          <span uib-tooltip='Edit item' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon glyphicon-cog settings-button' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' ng-click='lc.editListItem(item)'></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Add sub-quest' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-plus add-button' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' ng-click='lc.showFormWithMainQuestSelected(item.id)'></span>
+          <span uib-tooltip='Add sub-quest' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon glyphicon-plus add-button' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' ng-click='lc.showFormWithMainQuestSelected(item.id)'></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Remove quest and subquests' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-remove close-button' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' remove-item></span>
+          <span uib-tooltip='Remove quest and subquests' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon glyphicon-remove close-button' ng-show='item.hoveredOn && !lc.childrenHovered(item.id)' item-id='{{ item.id }}' remove-item></span>
         </div>
         <div class='col-xs-12 add-border'>
         <div class='list-title' ng-bind-html='item.title | removeTagsFilter | matchedSearchFilter : lc.searchValue'></div>

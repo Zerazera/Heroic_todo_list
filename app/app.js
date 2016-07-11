@@ -1,3 +1,5 @@
+//TODO Fix issue with hovering and tooltips.
+
 "use strict";
 
 var app = angular.module('listApp', ['ui.bootstrap', 'ngStorage', 'ngSanitize', 'ngAnimate']);

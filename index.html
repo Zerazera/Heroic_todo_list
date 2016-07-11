@@ -16,7 +16,7 @@
 <div class='container-fluid'>
   <div class='row-fluid'>
       <h1 class='text-center'>Heroic To-do List</h1>
-      <h5 class='text-center'>So many quests, so little time</h2>
+      <h5 class='text-center'>So many quests, so little time</h5>
     <div ng-app='listApp' ng-controller='listController as lc'>
       <div class='col-xs-12 col-sm-5 col-lg-4 menu-section' ng-class='{"menu-closed": !lc.showForm}' ng-show='lc.showForm'>
         <div class='col-xs-offset-11 col-xs-1 menu-close-button' ng-click='lc.hideForm()'>X</div>
@@ -54,23 +54,23 @@
         </div>
         <div class='col-xs-1'>
           <!--<span class='glyphicon list-checkbox' ng-class='lc.listItems.length === 0 ? "glyphicon-unchecked complete-checkbox-disabled" : lc.allChecked() ? "glyphicon-check" : "glyphicon-unchecked"' ng-click='lc.listItems.length !== 0 ? lc.checkAll() : ""'></span>-->
-          <span uib-tooltip='Check / uncheck all items' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon list-checkbox' ng-class='lc.listItems.length === 0 ? "glyphicon-unchecked complete-checkbox-disabled" : lc.allChecked() ? "glyphicon-check" : "glyphicon-unchecked"' check-all></span>
+          <span uib-tooltip='Check / uncheck all items' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon list-checkbox' ng-class='lc.listItems.length === 0 ? "glyphicon-unchecked complete-checkbox-disabled" : lc.allChecked() ? "glyphicon-check" : "glyphicon-unchecked"' check-all></span>
         </div>
         <div class='col-xs-1' ng-cloak>
-          <span uib-tooltip='Total percentage completed' tooltip-class='tooltip-font' tooltip-placement='auto top' ng-cloak>{{ lc.fullProportionCompleted() * 100 | number : 2 }}%</span>
+          <span uib-tooltip='Total percentage completed' tooltip-class='tooltip-font' tooltip-placement='auto right' ng-cloak>{{ lc.fullProportionCompleted() * 100 | number : 2 }}%</span>
         </div>
         <div class='col-xs-offset-5 col-xs-1'>
           <!--<span class='glyphicon complete-expand-collapse-button' ng-class='{"expand-collapse-disabled" : lc.listItems.length === 0, "glyphicon-menu-up": lc.allCollapsed(), "glyphicon-menu-down" : !lc.allCollapsed()}'ng-click='lc.listItems.length !==0 ? lc.toggleCollapseAll() : ""'></span>-->
-          <span uib-tooltip='Collapse / expand all sub-quests' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon complete-expand-collapse-button' ng-class='{"expand-collapse-disabled" : lc.listItems.length === 0, "glyphicon-menu-up": lc.allCollapsed(), "glyphicon-menu-down" : !lc.allCollapsed()}' toggle-collapse-all></span>
+          <span uib-tooltip='Collapse / expand all sub-quests' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon complete-expand-collapse-button' ng-class='{"expand-collapse-disabled" : lc.listItems.length === 0, "glyphicon-menu-up": lc.allCollapsed(), "glyphicon-menu-down" : !lc.allCollapsed()}' toggle-collapse-all></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Show / hide all descriptions' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-list-alt' ng-class='lc.allDescriptionsHidden() ? "close-button" : "add-button"' toggle-hide-all-descriptions></span>
+          <span uib-tooltip='Show / hide all descriptions' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon glyphicon-list-alt' ng-class='lc.allDescriptionsHidden() ? "close-button" : "add-button"' toggle-hide-all-descriptions></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Remove all completed quests and sub-quests' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-ok close-button' remove-completed></span>
+          <span uib-tooltip='Remove all completed quests and sub-quests' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon glyphicon-ok close-button' remove-completed></span>
         </div>
         <div class='col-xs-1'>
-          <span uib-tooltip='Remove all quests' tooltip-class='tooltip-font' tooltip-placement='auto top' class='glyphicon glyphicon-remove close-button' remove-all></span>
+          <span uib-tooltip='Remove all quests' tooltip-class='tooltip-font' tooltip-placement='auto right' class='glyphicon glyphicon-remove close-button' remove-all></span>
         </div>
       </div>
       <div class='col-xs-12 list-section' ng-class='lc.showForm ? "col-sm-offset-5 col-sm-7 col-lg-offset-4 col-lg-8" : "col-xs-12"'>
